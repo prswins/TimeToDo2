@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "776895796138",
+    "firebase_url": "https://timetodo-9549a.firebaseio.com",
+    "project_id": "timetodo-9549a",
+    "storage_bucket": "timetodo-9549a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776895796138:android:ed31142bb0013c0c3451d3",
+        "android_client_info": {
+          "package_name": "com.example.timetodo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "776895796138-30dpjocsgftd1io6302ouhiergru4v24.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.timetodo",
+            "certificate_hash": "89bfbcaacb51e35578f91d399035d650729d29fb"
+          }
+        },
+        {
+          "client_id": "776895796138-7r9hddkltlq3qt8cdr9238opmsm4r97i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBacKuleUR2Na2i_2bsOP7oCCnxbayVZtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776895796138-7r9hddkltlq3qt8cdr9238opmsm4r97i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
