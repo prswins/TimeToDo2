@@ -1,7 +1,9 @@
 package com.example.timetodo.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,9 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     private FirebaseAuth autenticacao;
-    TextView campoNome, campoEmail, campoSenha;
+    TextView campoNome, campoEmail, campoSenha, campoTipo;
+    Button botaoSalvar;
+    Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fabEmpresa);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,6 +46,32 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        if (usuario == null ){
+            usuario = new Usuario();
+            usuario.setEmail((String) getIntent().getSerializableExtra("usuarioEmail"));
+            usuario.setSenha((String) getIntent().getSerializableExtra("usuarioSenha"));
+            usuario.setTipo((String) getIntent().getSerializableExtra("usuarioTipo"));
+
+            Log.d("intent", "onCreate: "+usuario.getEmail()+ "  "+ usuario.getTipo()+ " "+usuario.getSenha());
+        }
+        campoEmail = findViewById(R.id.editTextEmail);
+        campoNome = findViewById(R.id.editTextNome);
+        campoSenha = findViewById(R.id.editTextSenha);
+        campoTipo = findViewById(R.id.editTextTipo);
+        botaoSalvar = findViewById(R.id.buttonSalvar);
+        campoEmail.setText(usuario.getEmail());
+        campoTipo.setText(usuario.getTipo());
+        campoSenha.setText(usuario.getSenha());
+
+        botaoSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validarCadastroUsuario(v);
+            }
+        });
+
+
+
     }
 
 
@@ -56,9 +86,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
             if( !textoEmail.isEmpty() ) {//verifica e-mail
                 if( !textoSenha.isEmpty() ) {//verifica senha
 
-                    Usuario usuario = new Usuario();
                     usuario.setNome( textoNome );
-                    usuario.setEmail( textoEmail );
                     usuario.setSenha( textoSenha );
 
 
@@ -94,21 +122,24 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
 
                 if ( task.isSuccessful() ){
 
+
                     try{
 
                         String idUsuario = task.getResult().getUser().getUid();
                         usuario.setId( idUsuario );
+                        usuario.setDataCriacaoConta();
                         usuario.salvar();
 
                         //Atualizar nome no UserProfile
                         UsuarioFirebase.atualizarNomeUsuario( usuario.getNome() );
+                        UsuarioFirebase.redirecionaUsuarioLogado(CadastroUsuarioActivity.this);
 
-                        // Redireciona o usuário com base no seu tipo
+                        // Redireciona o usuário com base no seu campoTipo
                         // Se o usuário for passageiro chama a activity maps
                         // senão chama a activity requisicoes
 
                         Toast.makeText(CadastroUsuarioActivity.this,
-                                "Sucesso ao cadastrar Motorista!",
+                                "Sucesso ao cadastrar !",
                                 Toast.LENGTH_SHORT).show();
 
                     }catch (Exception e){

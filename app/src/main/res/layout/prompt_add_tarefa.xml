@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/textViewAdaTTitulo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Titulo"
+        android:inputType="text"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/textViewAdaTDesc2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descricao"
+        android:inputType="text"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/textViewAdaTUsuario2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Usuario Responsavel"
+        android:inputType="text"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/textViewAdaTDTI2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Data inicio"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/textViewAdaTDTF2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Data Prevista Final"
+        android:inputType="text"
+        android:text="TextView" />
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

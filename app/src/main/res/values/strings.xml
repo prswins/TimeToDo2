@@ -4,4 +4,10 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_cadastro_usuario">CadastroUsuarioActivity</string>
     <string name="title_activity_administrador">AdministradorActivity</string>
+    <string name="title_activity_funcionario">FuncionarioActivity</string>
+    <string name="title_activity_empresario">EmpresarioActivity</string>
+    <string name="title_activity_cadastrar_empresa">CadastrarEmpresaActivity</string>
+    <string name="title_activity_empresa">EmpresaActivity</string>
+    <string name="title_activity_projetos">ProjetosActivity</string>
+    <string name="title_activity_tarefa">TarefaActivity</string>
 </resources>

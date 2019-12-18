@@ -7,6 +7,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.timetodo.activity.AdministradorActivity;
+import com.example.timetodo.activity.EmpresarioActivity;
+import com.example.timetodo.activity.FuncionarioActivity;
 import com.example.timetodo.config.ConfiguracaoFirebase;
 import com.example.timetodo.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,11 +55,53 @@ public class UsuarioFirebase {
         }
 
     }
-
-    public static void redirecionaUsuarioLogado(final Activity activity){
+    public static void redirecionaUsuarioCriado(final Activity activity ){
 
         FirebaseUser user = getUsuarioAtual();
+
         if(user != null ){
+            DatabaseReference usuariosRef = ConfiguracaoFirebase.getFirebaseDatabase()
+                    .child("permitidos")
+                    .child( getIdentificadorUsuario() );
+            usuariosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    Usuario usuario = dataSnapshot.getValue( Usuario.class );
+                    // Log.d("usuario", "onDataChange: "+ usuario.getTipo());
+                    // String tipoUsuario = dataSnapshot.getChildren().toString();
+
+                    String tipoUsuario = usuario.getTipo();
+                    if( tipoUsuario.equals("admGeral") ){
+                        Intent i = new Intent(activity, AdministradorActivity.class);
+                        activity.startActivity(i);
+                    }else if (tipoUsuario.equals("empresario")) {
+                        Intent i = new Intent(activity, EmpresarioActivity.class);
+                        activity.startActivity(i);
+                    }else {
+                        Intent i = new Intent(activity, FuncionarioActivity.class);
+                        i.putExtra("usuario", usuario);
+                        activity.startActivity(i);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
+
+
+
+    public static void redirecionaUsuarioLogado(final Activity activity ){
+
+        FirebaseUser user = getUsuarioAtual();
+
+       if(user != null ){
             DatabaseReference usuariosRef = ConfiguracaoFirebase.getFirebaseDatabase()
                     .child("usuarios")
                     .child( getIdentificadorUsuario() );
@@ -70,16 +114,18 @@ public class UsuarioFirebase {
                    // String tipoUsuario = dataSnapshot.getChildren().toString();
 
                     String tipoUsuario = usuario.getTipo();
+                    Intent i;
                     if( tipoUsuario.equals("admGeral") ){
-                       Intent i = new Intent(activity, AdministradorActivity.class);
-                       activity.startActivity(i);
-                    }else if (tipoUsuario.equals("admEmpresa")) {
-                      //  Intent i = new Intent(activity, EmpresaActivity.class);
-                      //  activity.startActivity(i);
+                        i = new Intent(activity, AdministradorActivity.class);
+
+                    }else if (tipoUsuario.equals("empresario")) {
+                         i = new Intent(activity, EmpresarioActivity.class);
+
                     }else {
-                        //  Intent i = new Intent(activity, FuncionarioActivity.class);
-                        //  activity.startActivity(i);
+                          i = new Intent(activity, FuncionarioActivity.class);
+
                     }
+                    activity.startActivity(i);
 
                 }
 

@@ -1,12 +1,14 @@
 package com.example.timetodo.model;
 
 import com.example.timetodo.config.ConfiguracaoFirebase;
+import com.example.timetodo.helper.UsuarioFirebase;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Usuario {
+public class Usuario implements Serializable {
     public Usuario() {
     }
 
@@ -19,7 +21,7 @@ public class Usuario {
         this.dataCriacaoConta = dataCriacaoConta;
     }
 
-    String email,id, nome, tipo, senha,dataCriacaoConta;
+    String email,id, nome, tipo, senha,dataCriacaoConta, idEmpresa, idProjeto;
 
     public String getDataCriacaoConta() {
         return dataCriacaoConta;
@@ -31,6 +33,22 @@ public class Usuario {
         String dataFormatada = formataData.format(data);
 
         this.dataCriacaoConta = dataFormatada;
+    }
+
+    public String getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(String idEmpresa) {
+        this.idEmpresa = idEmpresa;
+    }
+
+    public String getIdProjeto() {
+        return idProjeto;
+    }
+
+    public void setIdProjeto(String idProjeto) {
+        this.idProjeto = idProjeto;
     }
 
     public String getEmail() {
@@ -75,9 +93,11 @@ public class Usuario {
     public void salvar(){
 
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        DatabaseReference usuarios = firebaseRef.child( "usuarios" ).child( getId() );
+        DatabaseReference usuarios = firebaseRef.child( "usuarios" );
 
-        usuarios.setValue(this);
+        usuarios.child(UsuarioFirebase.getIdentificadorUsuario()).setValue(this);
+
+
 
     }
 }
