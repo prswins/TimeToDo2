@@ -1,6 +1,7 @@
 package com.example.timetodo.activity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -16,12 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.timetodo.R;
 import com.example.timetodo.adapter.ListaTarefasAdapter;
 import com.example.timetodo.config.ConfiguracaoFirebase;
+import com.example.timetodo.helper.DatePickerFragment;
 import com.example.timetodo.helper.RecyclerItemClickListener;
 import com.example.timetodo.helper.UsuarioFirebase;
 import com.example.timetodo.model.HistoricoAtividadesTarefas;
@@ -35,13 +39,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class ProjetosActivity extends AppCompatActivity {
+public class ProjetosActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     String idEmpresario;
     Projeto projeto = new Projeto();
-    TextView textViewDescricao,textViewStatus,textViewListaTarefas, textViewListaFunc ;
+    TextView textViewDescricao,textViewStatus,textViewListaTarefas, textViewListaFunc, textViewDataIni, textViewDataFim ;
     RecyclerView recyclerTarefas, recyclerFunc;
     Button botaoDTI, botaoDTF;
     final DatabaseReference dbRef = ConfiguracaoFirebase.getFirebaseDatabase();
@@ -50,7 +55,14 @@ public class ProjetosActivity extends AppCompatActivity {
     List<String> listaTarefasKey = new ArrayList<>();
     ListaTarefasAdapter adapterTarefas;
     String keyProjeto;
+    String currentDateString;
 
+
+    final Calendar c = Calendar.getInstance();
+    final int cYear = c.get(Calendar.YEAR);
+    final int cMonth = c.get(Calendar.MONTH);
+    final int cDay = c.get(Calendar.DAY_OF_MONTH);
+    final String dataAtual = String.valueOf(cDay)+"-"+String.valueOf(cMonth)+"-"+String.valueOf(cYear);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +96,31 @@ public class ProjetosActivity extends AppCompatActivity {
             Log.d("empresaAcvitity", "empresaAcvitity "+projeto.toString()+"    "+idEmpresario);
             textViewDescricao.setText(projeto.getDescricao());
             textViewStatus.setText(projeto.getStatus());
-            botaoDTI.setText(projeto.getDataInicio());
-            if(projeto.getDataFim() == null){
-                botaoDTF.setText("Clique para definir");
-            }else
-                botaoDTF.setText("Data Inicio: "+projeto.getDataFim());
 
+
+            atualizarDatas();
 
         }
+        botaoDTI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(v);
+                projeto.setDataInicio(currentDateString);
+                atualizarProjeto();
+                atualizarDatas();
+
+            }
+        });
+        botaoDTF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(v);
+                projeto.setDataFim(currentDateString);
+                atualizarProjeto();
+                atualizarDatas();
+
+            }
+        });
 
 
 
@@ -136,6 +165,40 @@ public class ProjetosActivity extends AppCompatActivity {
         });
     }
 
+    private void atualizarDatas() {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if(projeto.getDataInicio() == null){
+                    botaoDTI.setText("Definir data inicial.");
+                }else if(projeto.getDataInicio().equals(dataAtual) ){
+                    botaoDTI.setEnabled(false);
+                    botaoDTI.setText("Data inicial: "+projeto.getDataInicio()+".");
+                }else{
+                    botaoDTI.setText("Data inicial: "+projeto.getDataInicio()+", ainda pode ser alterada");
+                }
+
+                if(projeto.getDataFim() == null){
+                    botaoDTF.setText("Clique para definir a data limite do projeto");
+                }else{
+                    botaoDTF.setText("Finalizacao prevista para: "+projeto.getDataFim()+", clique aqui para alterar");
+                }
+
+            }
+        });
+
+
+    }
+
+    private void atualizarProjeto() {
+    }
+
+    private void showDatePickerDialog(View v) {
+        DialogFragment datePicker = new DatePickerFragment();
+        datePicker.show(getSupportFragmentManager(), "date picker");
+    }
+
     private void inserirNovaTarefa() {
         final Tarefa tarefa = new Tarefa();
         LayoutInflater li = LayoutInflater.from(this);
@@ -150,6 +213,44 @@ public class ProjetosActivity extends AppCompatActivity {
         final EditText InputTitulo = (EditText) promptsView.findViewById(R.id.textViewAdaTTitulo2);
         final EditText InputDescricao = (EditText) promptsView.findViewById(R.id.textViewAdaTDesc2);
         final EditText InputUsuario = (EditText) promptsView.findViewById(R.id.textViewAdaTUsuario2);
+
+        final TextView TextDtIni =  (TextView) promptsView
+                .findViewById(R.id.textViewDataIni);
+        final TextView TextDtFim =  (TextView) promptsView
+                .findViewById(R.id.textViewDataFim);
+        TextDtIni.setText("Data de inicio da tarefa");
+        TextDtFim.setText("data prevista para o fim do tarefa");
+
+        final int cYear;
+        final int cMonth;
+        final int cDay;
+        final Calendar c = Calendar.getInstance();
+        cYear = c.get(Calendar.YEAR);
+        cMonth = c.get(Calendar.MONTH);
+        cDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+
+        final DatePicker datePicker = (DatePicker) promptsView.findViewById(R.id.datePickerDTIni);
+        datePicker.init(cYear,cMonth , cDay, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Log.d("onDateChanged: ", "onDateChanged: "+view.getId());
+                tarefa.setDataInicio(String.valueOf(dayOfMonth)+"-"+String.valueOf(monthOfYear)+"-"+String.valueOf(year));
+
+            }
+        });
+        final DatePicker datePickerF = (DatePicker) promptsView.findViewById(R.id.datePickerProjetoDTFim);
+        Log.d("onDateChanged: ", "datePickerF: "+promptsView.findViewById(R.id.datePickerProjetoDTFim).getId());
+        datePickerF.init(cYear,cMonth , cDay+1, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view2, int year, int monthOfYear, int dayOfMonth) {
+                Log.d("onDateChanged: ", "onDateChanged: "+view2.getId());
+
+                tarefa.setDataFim(String.valueOf(dayOfMonth)+"-"+String.valueOf(monthOfYear)+"-"+String.valueOf(year));
+
+            }
+        });
 
 
 
@@ -246,4 +347,8 @@ public class ProjetosActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        currentDateString = String.valueOf(dayOfMonth)+"-"+String.valueOf(monthOfYear)+"-"+String.valueOf(year);
+    }
 }

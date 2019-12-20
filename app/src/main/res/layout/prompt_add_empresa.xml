@@ -10,8 +10,10 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Titulo"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Adicionar empresa"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextDialogNome"

@@ -36,6 +36,7 @@ public class ListaHistoricoAdapter extends RecyclerView.Adapter<ListaHistoricoAd
         HistoricoAtividadesTarefas historico = listaHistorico.get(position);
         holder.dtUltimaModificacao.setText("Data :"+historico.getUltimaAtualizacao());
         holder.tempo.setText("Tempo de trabalho :"+historico.getTempoDetrabalho());
+        holder.comentario.setText("Descricao: "+historico.getComentario());
 
     }
 
@@ -45,12 +46,13 @@ public class ListaHistoricoAdapter extends RecyclerView.Adapter<ListaHistoricoAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView dtUltimaModificacao, tempo;
+        TextView dtUltimaModificacao, tempo, comentario;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             dtUltimaModificacao = itemView.findViewById(R.id.textViewAHTData);
             tempo = itemView.findViewById(R.id.textViewAHTTempo);
+            comentario = itemView.findViewById(R.id.textViewComentario);
 
         }
 

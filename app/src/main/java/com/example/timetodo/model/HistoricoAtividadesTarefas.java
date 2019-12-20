@@ -7,19 +7,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class HistoricoAtividadesTarefas {
-    String id, idTarefa, status, ultimaAtualizacao, projeto;
+    String id, idTarefa, status, ultimaAtualizacao, projeto, comentario;
     int tempoDetrabalho;
 
     public HistoricoAtividadesTarefas() {
     }
 
-    public HistoricoAtividadesTarefas(String id, String idTarefa, String status, String ultimaAtualizacao, String projeto, int tempoDetrabalho) {
+    public HistoricoAtividadesTarefas(String id, String idTarefa, String status, String ultimaAtualizacao, String projeto, int tempoDetrabalho, String comentario) {
         this.id = id;
         this.idTarefa = idTarefa;
         this.status = status;
         this.ultimaAtualizacao = ultimaAtualizacao;
         this.projeto = projeto;
         this.tempoDetrabalho = tempoDetrabalho;
+        this.comentario = comentario;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 
     public String getIdTarefa() {

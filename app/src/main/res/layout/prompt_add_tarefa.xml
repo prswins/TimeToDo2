@@ -3,14 +3,30 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adicionar tarefa"
+        android:textAlignment="center"
+        android:textSize="22dp"
+        android:textStyle="bold"
+
+        />
+
     <EditText
         android:id="@+id/textViewAdaTTitulo2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Titulo"
+        android:hint="Titulo tarefa"
         android:inputType="text"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold">
+
+        <requestFocus />
+    </EditText>
+
+
 
     <EditText
         android:id="@+id/textViewAdaTDesc2"
@@ -18,7 +34,8 @@
         android:layout_height="wrap_content"
         android:hint="Descricao"
         android:inputType="text"
-        android:textSize="18sp" />
+        android:textSize="18sp" ><requestFocus/>
+    </EditText>
 
     <EditText
         android:id="@+id/textViewAdaTUsuario2"
@@ -26,25 +43,50 @@
         android:layout_height="wrap_content"
         android:hint="Usuario Responsavel"
         android:inputType="text"
-        android:textStyle="bold" />
+        android:textStyle="bold" >
+        <requestFocus/></EditText>
 
-    <EditText
-        android:id="@+id/textViewAdaTDTI2"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Data inicio"
-        android:inputType="text" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/textViewAdaTDTF2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Data Prevista Final"
-        android:inputType="text"
-        android:text="TextView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/textViewDataIni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <DatePicker
+                android:id="@+id/datePickerDTIni"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/textViewDataFim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="TextView"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <DatePicker
+                android:id="@+id/datePickerProjetoDTFim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

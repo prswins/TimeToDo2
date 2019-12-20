@@ -22,12 +22,16 @@
 
     <include layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabEmpresa"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/buttonMainEntrar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:layout_gravity="bottom|center"
+        android:layout_margin="16dp"
+        android:background="@color/colorAccent"
+        android:padding="4dp"
+        android:text="Entrar"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

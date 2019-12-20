@@ -1,12 +1,16 @@
 package com.example.timetodo.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -232,7 +236,7 @@ public class TarefaActivity extends AppCompatActivity {
     public void  pauseCronometro(){
         MILLIS = SystemClock.elapsedRealtime() - chronometer.getBase();
         chronometer.stop();
-        HistoricoAtividadesTarefas historico = new HistoricoAtividadesTarefas();
+       final HistoricoAtividadesTarefas historico = new HistoricoAtividadesTarefas();
         historico.setIdTarefa(tarefa.getId());
         historico.setProjeto(keyTarefa);
         historico.setStatus(tarefa.getStatus());
@@ -241,11 +245,46 @@ public class TarefaActivity extends AppCompatActivity {
         tempoTotalSessaoSegundos = tempoTotalSessaoSegundos/1000; //segundos
         historico.setTempoDetrabalho(tempoTotalSessaoSegundos);
         Log.d("pauseCronometro", "pauseCronometro: "+historico.getProjeto()+"---"+historico.getIdTarefa());
-        historico.salvar();
-        tarefa.setTempoTotalTrabalho(tempoTotalTrabalhado);
-        //tarefa.salvar();
-        MILLIS = 0;
+
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.prompts, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        alertDialogBuilder.setView(promptsView);
+        final TextView textTitulo = (TextView) promptsView.findViewById(R.id.textView1);
+        textTitulo.setText("Comentario");
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+
+                                historico.setComentario(userInput.getText().toString());
+                                historico.salvar();
+                                tarefa.setTempoTotalTrabalho(tempoTotalTrabalhado);
+                                MILLIS = 0;
+
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
     }
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.timetodo.activity;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,10 +38,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class EmpresaActivity extends AppCompatActivity {
+public class EmpresaActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     Empresa empresa;
     String  idEmpresario;
     String keyEmpresa;
@@ -61,6 +66,7 @@ public class EmpresaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_empresa);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
         Log.d("empresaAcvitity", "empresaAcvitity: "+getIntent().getExtras().getString("idEmpresario"));
         Log.d("empresaAcvitity", "empresaAcvitityEmp: "+getIntent().getSerializableExtra("empresa"));
         if((getIntent().getExtras().containsKey("empresa")) && (getIntent().getExtras().containsKey("idEmpresario")) && (getIntent().getExtras().containsKey("keyEmpresa")) ){
@@ -68,13 +74,13 @@ public class EmpresaActivity extends AppCompatActivity {
           empresa = (Empresa) getIntent().getSerializableExtra("empresa");
           idEmpresario = getIntent().getExtras().getString("idEmpresario");
           keyEmpresa = getIntent().getExtras().getString("keyEmpresa");
-            toolbar.setTitle(empresa.getNome());
+            ab.setTitle(empresa.getNome());
             Log.d("empresaAcvitity", "empresaAcvitity "+empresa.toString()+"    "+idEmpresario);
 
         }
 
         carregarProjetos();
-        carregarTdsUsuarios();
+
 
 
         campoDescricao = findViewById(R.id.textViewDescr);
@@ -83,7 +89,7 @@ public class EmpresaActivity extends AppCompatActivity {
         campoListaProjetos = findViewById(R.id.textViewListaProjetos);
 
             recyclerFunc = findViewById(R.id.recyclerListaFunc);
-            adapterFunc = new ListaFuncionariosAdapter(listaFuncionarios, getApplicationContext());
+            adapterFunc = new ListaFuncionariosAdapter(listaUsuarios, getApplicationContext());
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerFunc.setLayoutManager(layoutManager);
             recyclerFunc.setHasFixedSize(true);
@@ -135,10 +141,6 @@ public class EmpresaActivity extends AppCompatActivity {
                 }
             }));
 
-
-
-
-
         campoNome.setText(empresa.getNome());
         campoDescricao.setText(empresa.getDescricao());
 
@@ -179,6 +181,10 @@ public class EmpresaActivity extends AppCompatActivity {
 
     private void inserirNovaProjeto() {
         final Projeto proj = new Projeto();
+        final int cYear;
+        final int cMonth;
+        final int cDay;
+
 
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.prompt_add_projeto, null);
@@ -194,6 +200,41 @@ public class EmpresaActivity extends AppCompatActivity {
         final EditText editTextDialogDescricaoProj = (EditText)  promptsView
                 .findViewById(R.id.editTextDialogDescricaoProj);
 
+        final TextView TextDtIni =  (TextView) promptsView
+                .findViewById(R.id.textViewDataIni);
+        final TextView TextDtFim =  (TextView) promptsView
+                .findViewById(R.id.textViewDataFim);
+        TextDtIni.setText("Data de inicio do projeto");
+        TextDtFim.setText("data prevista para o fim do projeto");
+
+        final Calendar c = Calendar.getInstance();
+        cYear = c.get(Calendar.YEAR);
+        cMonth = c.get(Calendar.MONTH);
+        cDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+
+        final DatePicker datePicker = (DatePicker) promptsView.findViewById(R.id.datePickerDTIni);
+        datePicker.init(cYear,cMonth , cDay, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Log.d("onDateChanged: ", "onDateChanged: "+view.getId());
+             proj.setDataInicio(String.valueOf(dayOfMonth)+"-"+String.valueOf(monthOfYear)+"-"+String.valueOf(year));
+
+            }
+        });
+        final DatePicker datePickerF = (DatePicker) promptsView.findViewById(R.id.datePickerProjetoDTFim);
+        Log.d("onDateChanged: ", "datePickerF: "+promptsView.findViewById(R.id.datePickerProjetoDTFim).getId());
+        datePickerF.init(cYear,cMonth , cDay+1, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view2, int year, int monthOfYear, int dayOfMonth) {
+                Log.d("onDateChanged: ", "onDateChanged: "+view2.getId());
+
+                proj.setDataFim(String.valueOf(dayOfMonth)+"-"+String.valueOf(monthOfYear)+"-"+String.valueOf(year));
+
+            }
+        });
+
 
         // set dialog message
         alertDialogProjetoBuilder
@@ -206,8 +247,8 @@ public class EmpresaActivity extends AppCompatActivity {
                                 proj.setId(keyEmpresa);
                                 proj.setDescricao(editTextDialogDescricaoProj.getText().toString());
                                 proj.setTitulo(String.valueOf(editTextDialogNomeProj.getText()));
+
                                 Log.d("empresaActivity", "inserirNovaProjeto: "+editTextDialogDescricaoProj.getText().toString()+ "      "+ proj.getTitulo());
-                                proj.setDataInicio();
                                 proj.setEmpresa(empresa.getNome());
                                 salvarProjeto(proj);
 
@@ -383,7 +424,20 @@ public class EmpresaActivity extends AppCompatActivity {
             }
         });
 
-
+        carregarTdsUsuarios();
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(currentDateString);
+
+        Log.d("dataPicker", "dataPicker "+currentDateString);
+    }
 }

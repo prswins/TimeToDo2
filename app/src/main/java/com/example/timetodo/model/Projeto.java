@@ -4,8 +4,6 @@ import com.example.timetodo.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class Projeto implements Serializable {
@@ -71,11 +69,8 @@ public class Projeto implements Serializable {
         return dataInicio;
     }
 
-    public void setDataInicio() {
-        SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
-        Date data = new Date();
-        String dataFormatada = formataData.format(data);
-        this.dataInicio = dataFormatada;
+    public void setDataInicio(String dataInicio) {
+        this.dataInicio = dataInicio;
     }
 
     public String getDataFim() {

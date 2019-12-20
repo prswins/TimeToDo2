@@ -5,16 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.timetodo.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MainActivity extends AppCompatActivity {
     Boolean login;
+    Button botaoLogin;
 
     @Override
     protected void onDestroy() {
@@ -27,21 +27,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        botaoLogin =findViewById(R.id.buttonMainEntrar);
+        carregarDados();
 
-        FloatingActionButton fab = findViewById(R.id.fabEmpresa);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        botaoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent);
             }
         });
-        login = false;
-        if (login == false){
-            Intent intent = new Intent(this,LoginActivity.class);
-            startActivity(intent);
+    }
 
-        }
+    private void carregarDados() {
+
+
 
     }
 

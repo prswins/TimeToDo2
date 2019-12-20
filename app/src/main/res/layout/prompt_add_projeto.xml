@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -9,34 +10,76 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Titulo"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="Adicionar projeto"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextDialogNomeProj"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Nome do Projeto"
         android:inputType="textWebEmailAddress">
 
         <requestFocus />
 
     </EditText>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Descrição"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
         android:id="@+id/editTextDialogDescricaoProj"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:cursorVisible="false"
-        android:inputType="textWebEmailAddress">
+        android:hint="Descricao do projeto "
+        android:inputType="none|textMultiLine">
 
         <requestFocus />
 
     </EditText>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textViewDataIni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Data inicio projeto " />
+
+            <DatePicker
+                android:id="@+id/datePickerDTIni"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/textViewDataFim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="@color/colorAccent"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Data prevista para finalizacao " />
+
+            <DatePicker
+                android:id="@+id/datePickerProjetoDTFim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>
