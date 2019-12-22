@@ -35,10 +35,10 @@ public class ItensMainAdapter extends RecyclerView.Adapter<ItensMainAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         listaItens.get(position).getCampo1();
-        holder.campo1.setText(listaItens.get(position).getCampo1());
+                holder.campo1.setText(listaItens.get(position).getCampo1());
         holder.campo2.setText(listaItens.get(position).getCampo2());
         holder.campo3.setText(listaItens.get(position).getCampo3());
-
+        holder.imagem.setImageResource(R.drawable.tarefa);
 
     }
 
