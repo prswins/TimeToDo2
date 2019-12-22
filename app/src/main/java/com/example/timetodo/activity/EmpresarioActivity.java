@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.timetodo.R;
 import com.example.timetodo.adapter.EmpresasAdapter;
@@ -70,9 +71,13 @@ public class EmpresarioActivity extends AppCompatActivity {
         recyclerEmpresas = findViewById(R.id.recyclerEmpresas);
         texto1 = findViewById(R.id.textViewRecycler);
 
+
+        StaggeredGridLayoutManager layoutManagerGrigEscalonavel =
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
         adapter = new EmpresasAdapter(listaEmpresas, getApplicationContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerEmpresas.setLayoutManager(layoutManager);
+        recyclerEmpresas.setLayoutManager(layoutManagerGrigEscalonavel);
         recyclerEmpresas.setHasFixedSize(true);
         recyclerEmpresas.setAdapter(adapter);
         recyclerEmpresas.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerEmpresas, new RecyclerItemClickListener.OnItemClickListener() {

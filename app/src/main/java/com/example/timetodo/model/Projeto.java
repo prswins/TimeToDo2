@@ -102,5 +102,11 @@ public class Projeto implements Serializable {
 
         projetos.child(getId()).push().setValue(this);
     }
+    public void excluir(String key){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference projetos = firebaseRef.child( "projetos" ).child(this.getId());
+        projetos.child(key).removeValue();
+
+    }
 
 }
