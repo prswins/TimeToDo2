@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,11 +45,12 @@ public class TarefaActivity extends AppCompatActivity {
     Tarefa tarefa;
     String keyTarefa;
     Usuario usuario;
-    TextView  textViewTdescricao, textViewTstatus, textViewTdataInicial, textViewTdataFinal, textViewTdataCriacao, textViewTresponsavel, textViewListaHistorico, textViewTotalHorasTrabalho;
+    TextView  textViewTdescricao, textViewTstatus, textViewTdataInicial, textViewTdataFinal, textViewTdataCriacao, textViewTresponsavel, textViewListaHistorico, textViewTotalHorasTrabalho, textViewTotalTrabalho, textViewTrabalhadas, textViewRestante  ;
     Button botaoAtividade, botaoFinalizar;
     RecyclerView recyclerHistorico;
+    LinearLayout linearLayoutTarefas, linearLayoutDatas, linearLayoutTempoTrabalho;
     private static boolean isRunning;
-    private long MILLIS;
+    private long SEGUNDOS;
     private static final int SECS_IN_MIN = 60;
     private Chronometer chronometer;
     final DatabaseReference dbRef = ConfiguracaoFirebase.getFirebaseDatabase();
@@ -69,7 +71,11 @@ public class TarefaActivity extends AppCompatActivity {
         textViewTstatus = findViewById(R.id.textViewAdaTStatus2);
         textViewTdataInicial= findViewById(R.id.textViewAdaTDTI3);
         textViewTdataFinal= findViewById(R.id.textViewAdaTDTF3);
-        textViewTdataCriacao= findViewById(R.id.textViewAdaTDTC2);
+        textViewTotalTrabalho = findViewById(R.id.textViewTotalTrabalho);
+        textViewTrabalhadas = findViewById(R.id.textViewTrabalhadas);
+        textViewRestante = findViewById(R.id.textViewRestante);
+
+
         textViewTresponsavel= findViewById(R.id.textViewAdaTUsuario3);
         textViewListaHistorico = findViewById(R.id.textViewTextoHistorico);
         botaoAtividade = findViewById(R.id.buttonIniciarTrabalho);
@@ -78,8 +84,10 @@ public class TarefaActivity extends AppCompatActivity {
         botaoFinalizar.setEnabled(false);
         recyclerHistorico = findViewById(R.id.recyclerHistorico);
         textViewTotalHorasTrabalho = findViewById(R.id.textViewTotalHorasTrabalho);
+        linearLayoutTarefas = findViewById(R.id.linearLayoutTarefas);
+        linearLayoutDatas = findViewById(R.id.linearLayoutDatas);
         View view = findViewById(R.id.tarefasss);
-        MILLIS = 0;
+        SEGUNDOS = 0;
         chronometer = findViewById(R.id.cronometro);
 
         botaoFinalizar.setVisibility(View.VISIBLE);
@@ -98,20 +106,31 @@ public class TarefaActivity extends AppCompatActivity {
             tarefa =(Tarefa) getIntent().getSerializableExtra("tarefa");
             ab.setTitle(tarefa.getTitulo());
             Log.d("tarefaAcvitity", "tarefaAcvitity " + projeto.toString() + "    " + tarefa.toString());
-            textViewTdescricao.setText(tarefa.getDescricao());
+            textViewTdescricao.setText(tarefa.getDescricao()+", data de atribuicao :"+tarefa.getDataCriacao());
             textViewTstatus.setText(tarefa.getStatus());
-            textViewTdataInicial.setText(tarefa.getDataInicio());
-            textViewTdataFinal.setText(tarefa.getDataFim());
-            textViewTdataCriacao.setText(tarefa.getDataCriacao());
-            textViewTresponsavel.setText(tarefa.getFuncionarioResponsavel());
-            if (!(tarefa.getStatus()== null)) {
+            if(tarefa.getDataInicio() ==null){
+                textViewTdataInicial.setVisibility(View.GONE);
+            }
+            if (tarefa.getDataFim() == null){
+                textViewTdataFinal.setVisibility(View.GONE);
+            }
+            if ((tarefa.getDataInicio() ==null) && (tarefa.getDataFim() == null) ){
+                linearLayoutDatas.setVisibility(View.GONE);
 
+            }
+
+            textViewTdataInicial.setText("Data do inicio da tarefa: "+tarefa.getDataInicio());
+            textViewTdataFinal.setText("Data estimada para o fim da tarefa: "+tarefa.getDataFim());
+           // textViewTdataCriacao.setText("Data da atribuicao da atividade: "+tarefa.getDataCriacao());
+            textViewTresponsavel.setText("Funcionario responsaval: "+tarefa.getFuncionarioResponsavel());
+            if (!(tarefa.getStatus()== null)) {
                 if (tarefa.getStatus().equals("afazer")) {
-                    view.setBackgroundColor(getResources().getColor(R.color.colorStatusAfazer));
+                   linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_afazer));
                     botaoFinalizar.setEnabled(false);
                     botaoFinalizar.setVisibility(View.GONE);
 
                 } else if (tarefa.getStatus().equals("fazendo")) {
+                    linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_fazendo));
                     botaoFinalizar.setVisibility(View.VISIBLE);
                     botaoFinalizar.setEnabled(true);
 
@@ -135,22 +154,48 @@ public class TarefaActivity extends AppCompatActivity {
 
                     if (dataAtual.after(dataFim)) {
                         botaoAtividade.setEnabled(false);
-                        view.setBackgroundColor(getResources().getColor(R.color.colorStatusAtrasado));
+                        linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_atrasado));
 
                     } else {
-                        view.setBackgroundColor(getResources().getColor(R.color.colorStatusFazendo));
+                        linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_fazendo));
                         //     ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusFazendo")));
                     }
                     }
-                } else if (tarefa.getStatus().equals("concluida")) {
+                } else if (tarefa.getStatus().equals("concluido")) {
                     botaoAtividade.setEnabled(false);
                     botaoAtividade.setVisibility(View.GONE);
                     botaoFinalizar.setEnabled(false);
                     botaoFinalizar.setVisibility(View.GONE);
-                    view.setBackgroundColor(getResources().getColor(R.color.colorStatusConcluida));
+                    linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_concluido));
                     //  ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusConcluido")));
                 }
+            }else{
+                linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_nenhum));
             }
+            linearLayoutTempoTrabalho = findViewById(R.id.linearLayoutTempoTrabalho);
+            Long tempoTotal, tempoTrabalhado, restante;
+            if (tarefa.getTempoParaTerminar() != null){
+                tempoTotal = (8*tarefa.getTempoParaTerminar());
+
+                textViewTotalTrabalho.setText(String.valueOf(tempoTotal));
+                if (tarefa.getTempoParaTerminar()!=null){
+                    tempoTrabalhado = tarefa.getTempoTotalTrabalho();
+                    textViewTrabalhadas.setText(String.valueOf(tempoTrabalhado));
+                    restante = tempoTotal-tempoTrabalhado;
+                    textViewRestante.setText(String.valueOf(restante));
+                }
+                else {
+                    textViewTrabalhadas.setText("Nao trabalhado");
+                    textViewRestante.setText(String.valueOf(tempoTotal));
+
+                }
+            }else {
+                linearLayoutTempoTrabalho.setVisibility(View.GONE);
+            }
+
+
+
+
 
         }
         if((getIntent().getExtras().containsKey("keyTarefa"))){
@@ -230,19 +275,19 @@ public class TarefaActivity extends AppCompatActivity {
                         Log.d("recuperarHistorico", "onDataChange: "+h.getValue().toString());
                         listaHistorico.add(h.getValue(HistoricoAtividadesTarefas.class));
                         tempoTotalTrabalhado = tempoTotalTrabalhado + h.getValue(HistoricoAtividadesTarefas.class).getTempoDetrabalho();
-                        textViewTotalHorasTrabalho.setText("Total Horas Trabalhadas "+tempoTotalTrabalhado/3600 +" horas");
+                        textViewTotalHorasTrabalho.setText("Total Horas Trabalhadas: "+tempoTotalTrabalhado/3600 +" horas");
                         ultimaAtualizacao = h.getValue(HistoricoAtividadesTarefas.class).getUltimaAtualizacao();
                         textViewListaHistorico.setText("Historico de Atividades na Tarefa :");
                         recyclerHistorico.setVisibility(View.VISIBLE);
 
                     }
                     tarefa.setTempoTotalTrabalho(tempoTotalTrabalhado);
-                    tarefa.setDescricao(tarefa.getDescricao()+", data da ultima atualizacao: "+ultimaAtualizacao);
+                    textViewTstatus.setText(textViewTstatus.getText()+", ultima atualizacao: "+ultimaAtualizacao);
                     adapterHistorico.notifyDataSetChanged();
                 }else{
 
 
-                    textViewListaHistorico.setText("Nao existem atividades nessa tarefa :");
+                    textViewListaHistorico.setText("Nao existem atividades nessa tarefa !");
                     recyclerHistorico.setVisibility(View.GONE);
                     textViewTotalHorasTrabalho.setText("Nao foi trabalhada nessa tarefa");
                 }
@@ -278,19 +323,19 @@ public class TarefaActivity extends AppCompatActivity {
 
     }
     public void startCronometro(){
-        chronometer.setBase(SystemClock.elapsedRealtime() - MILLIS);
+        chronometer.setBase(SystemClock.elapsedRealtime() - SEGUNDOS);
         chronometer.start();
 
     }
     public void  pauseCronometro(){
-        MILLIS = SystemClock.elapsedRealtime() - chronometer.getBase();
+        SEGUNDOS = SystemClock.elapsedRealtime() - chronometer.getBase();
         chronometer.stop();
        final HistoricoAtividadesTarefas historico = new HistoricoAtividadesTarefas();
         historico.setIdTarefa(tarefa.getId());
         historico.setProjeto(keyTarefa);
         historico.setStatus(tarefa.getStatus());
         historico.setUltimaAtualizacao();
-        int tempoTotalSessaoSegundos = (int) MILLIS;
+        int tempoTotalSessaoSegundos = (int) SEGUNDOS;
         tempoTotalSessaoSegundos = tempoTotalSessaoSegundos/1000; //segundos
         historico.setTempoDetrabalho(tempoTotalSessaoSegundos);
         Log.d("pauseCronometro", "pauseCronometro: "+historico.getProjeto()+"---"+historico.getIdTarefa());
@@ -340,9 +385,9 @@ public class TarefaActivity extends AppCompatActivity {
         historico.salvar();
         tarefa.setTempoTotalTrabalho(tempoTotalTrabalhado);
         tarefa.setKeyTarefa(keyTarefa);
-        tarefa.atualizarTempoTrabalhado((tarefa.getTempoTotalTrabalho()+MILLIS));
+        tarefa.atualizarTempoTrabalhado((tarefa.getTempoTotalTrabalho()+(SEGUNDOS /3600)));//segundos em horas
         tarefa.atualizarStatus();
-        MILLIS = 0;
+        SEGUNDOS = 0;
 
 
     }

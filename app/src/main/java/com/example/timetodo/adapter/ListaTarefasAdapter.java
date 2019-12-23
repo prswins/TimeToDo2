@@ -45,26 +45,21 @@ public class ListaTarefasAdapter extends RecyclerView.Adapter<ListaTarefasAdapte
         holder.descricao.setText(t.getDescricao());
         holder.dataAtribuicao.setText(t.getDataCriacao());
         String dataIni, dataFim;
-        dataIni = "Data de inicio da Tarefa :";
-        dataFim = "Data prevista para fim da tarefa :";
-        holder.dataInicial.setText(dataIni  +t.getDataInicio());
-        holder.dataFinal.setText(dataFim+t.getDataFim() );
+        dataIni = "Data de inicio da Tarefa: ";
+        dataFim = "Data prevista para fim da tarefa: ";
+        holder.dataInicial.setText(dataIni +t.getDataInicio());
+        holder.dataFinal.setText(dataFim +t.getDataFim() );
         holder.usuario.setText(t.getFuncionarioResponsavel());
         holder.tempo.setText("Tempo total trabalhado: "+String.valueOf((t.getTempoTotalTrabalho()/3600)+" horas."));
 
 
-        holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusFazendo));
-
         if (!(t.getStatus()== null)){
-
-            if (t.getStatus().equals("afazer") && t.getTempoTotalTrabalho() == 0) {
-                holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusAfazer));
-                //   ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusAfazer")));
-            } else if (t.getStatus().equals("fazendo") || t.getTempoTotalTrabalho() > 0) {
+            if(t.getStatus().equals("afazer")){
+                holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_afazer));
+            }else if (t.getStatus().equals("fazendo")){
+                holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_fazendo));
                 SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
                 Date dataAtual = new Date();
-
-
                 if (t.getDataFim() != null  ) {
                     Date convertedDateFim = new Date();
                     try {
@@ -74,25 +69,20 @@ public class ListaTarefasAdapter extends RecyclerView.Adapter<ListaTarefasAdapte
                         e.printStackTrace();
                     }
 
-                    int diferenca = dataAtual.compareTo(convertedDateFim);
-                    if(diferenca < 0){
-                        holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusAtrasado));
+                    if(dataAtual.after(convertedDateFim)){
+                        holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_atrasado));
                     }else{
-                        holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusFazendo));
+                        holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_fazendo));
                     }
                 }
-            } else if (t.getStatus().equals("concluida")) {
-                holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusConcluida));
-                //  ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusConcluido")));
+
+
+            }else if(t.getStatus().equals("concluido")){
+                holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_concluido));
             }
         }else if (t.getDataFim() == null){
-            holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusNenhum));
+            holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_nenhum));
         }
-
-
-
-
-
     }
 
     @Override

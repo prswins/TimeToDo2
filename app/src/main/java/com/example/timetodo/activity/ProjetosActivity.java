@@ -47,7 +47,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
 
     String idEmpresario;
     Projeto projeto = new Projeto();
-    TextView textViewDescricao,textViewStatus,textViewListaTarefas, textViewListaFunc, textViewDataIni, textViewDataFim ;
+    TextView textViewDescricao,textViewStatus,textViewListaTarefas, textViewListaFunc, textViewDescr, textViewDataFim ;
     RecyclerView recyclerTarefas, recyclerFunc;
     Button botaoDTI, botaoDTF;
     final DatabaseReference dbRef = ConfiguracaoFirebase.getFirebaseDatabase();

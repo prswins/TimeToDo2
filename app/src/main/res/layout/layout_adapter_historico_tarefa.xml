@@ -18,7 +18,8 @@
             android:layout_weight="1"
             android:fontFamily="casual"
             android:gravity="center|start"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/design_default_color_primary_dark" />
 
         <TextView
             android:id="@+id/textViewAHTTempo"
@@ -27,7 +28,8 @@
             android:layout_weight="1"
             android:fontFamily="casual"
             android:gravity="end"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/design_default_color_primary_dark" />
     </LinearLayout>
 
     <TextView
@@ -36,6 +38,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="casual"
         android:text="descricao"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/design_default_color_primary_dark" />
 
 </LinearLayout>
