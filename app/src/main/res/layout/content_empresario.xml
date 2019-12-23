@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center|top"
     android:background="@drawable/backrepeat"
     android:gravity="center"
     android:hapticFeedbackEnabled="false"
@@ -16,12 +17,14 @@
         android:id="@+id/textViewRecycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="nao tem empresas" />
+        android:text="nao tem empresas"
+        android:textColor="@color/design_default_color_primary_dark" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerEmpresas"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
 
     </androidx.recyclerview.widget.RecyclerView>

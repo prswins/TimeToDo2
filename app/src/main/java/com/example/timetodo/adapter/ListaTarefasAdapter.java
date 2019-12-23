@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.timetodo.R;
 import com.example.timetodo.model.Tarefa;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -49,31 +50,42 @@ public class ListaTarefasAdapter extends RecyclerView.Adapter<ListaTarefasAdapte
         holder.dataInicial.setText(dataIni  +t.getDataInicio());
         holder.dataFinal.setText(dataFim+t.getDataFim() );
         holder.usuario.setText(t.getFuncionarioResponsavel());
-        holder.tempo.setText("Tempo total trabalhado: "+String.valueOf((t.getTempoTotalTrabalho())+" horas."));
+        holder.tempo.setText("Tempo total trabalhado: "+String.valueOf((t.getTempoTotalTrabalho()/3600)+" horas."));
 
 
         holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusFazendo));
 
-        if (!(t.getStatus()== null)) {
+        if (!(t.getStatus()== null)){
 
             if (t.getStatus().equals("afazer") && t.getTempoTotalTrabalho() == 0) {
                 holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusAfazer));
                 //   ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusAfazer")));
             } else if (t.getStatus().equals("fazendo") || t.getTempoTotalTrabalho() > 0) {
                 SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
-                Date data = new Date();
-                String dataFormatada = formataData.format(data);
-                if (t.getDataFim() != null && t.getDataFim().equals(dataFormatada)) {
-                    holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusAtrasado));
-                } else {
-                    holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusFazendo));
-                }
+                Date dataAtual = new Date();
 
+
+                if (t.getDataFim() != null  ) {
+                    Date convertedDateFim = new Date();
+                    try {
+                        convertedDateFim = formataData.parse(t.getDataFim());
+                    } catch (ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    int diferenca = dataAtual.compareTo(convertedDateFim);
+                    if(diferenca < 0){
+                        holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusAtrasado));
+                    }else{
+                        holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusFazendo));
+                    }
+                }
             } else if (t.getStatus().equals("concluida")) {
                 holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusConcluida));
                 //  ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusConcluido")));
             }
-        }else{
+        }else if (t.getDataFim() == null){
             holder.fundo.setBackgroundColor(context.getResources().getColor(R.color.colorStatusNenhum));
         }
 

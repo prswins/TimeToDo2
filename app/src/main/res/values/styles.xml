@@ -27,4 +27,9 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="AppTheme.Button2" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/design_default_color_primary</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

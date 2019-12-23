@@ -5,9 +5,9 @@
     android:id="@+id/tarefasss"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backrepeat"
     android:orientation="vertical"
-    android:paddingTop="60dp"
-    android:paddingBottom="60dp"
+    android:paddingBottom="70dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.TarefaActivity"
     tools:showIn="@layout/activity_tarefa">
@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="casual"
             android:text="TextView"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent" />
 
         <TextView
             android:id="@+id/textViewAdaTDesc3"
@@ -74,7 +75,7 @@
             android:fontFamily="casual"
             android:text="TextView"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/design_default_color_primary_dark"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -84,11 +85,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:fontFamily="casual"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/design_default_color_primary_dark" />
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center">
 
             <LinearLayout
@@ -101,7 +103,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerHistorico"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/layout_adapter_tarefas" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

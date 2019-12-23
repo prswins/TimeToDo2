@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ProjetosActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -271,6 +272,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
                                 tarefa.setDescricao(InputDescricao.getText().toString());
                                 tarefa.setFuncionarioResponsavel(InputUsuario.getText().toString());
                                 tarefa.setTempoTotalTrabalho((long) 0);
+                                tarefa.setTempoParaTerminar(calcTempoTerminar(tarefa.getDataInicio(),tarefa.getDataFim()));
                                 tarefa.salvar();
 
 
@@ -288,6 +290,34 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
 
         // show it
         alertDialog.show();
+    }
+    private long calcTempoTerminar(String dataI, String dataF){
+
+        if((dataI!= null) && (dataF != null)){
+
+            Long hr = DiferencaDatas(dataI, dataF);
+            Log.d("tarefa", "setTempoParaTerminar: "+hr);
+            return hr*8*60*60;
+
+        }else{
+            return Long.valueOf(0);
+        }
+    }
+    public long DiferencaDatas(String dataInicial, String dataFinal){
+
+        Date data1 = new Date(), data2 = new Date();
+
+        Calendar c1 = Calendar.getInstance();
+
+        //Pega a primeira data
+        c1.set(Integer.parseInt(dataInicial.substring(6, 9)), Integer.parseInt(dataInicial.substring(3, 5)), Integer.parseInt(dataInicial.substring(0,2)));
+        data1.setTime(c1.getTimeInMillis());
+
+        //Pega a segunda data
+        c1.set(Integer.parseInt(dataFinal.substring(6, 9)), Integer.parseInt(dataFinal.substring(3, 5)), Integer.parseInt(dataFinal.substring(0,2)));
+        data2.setTime(c1.getTimeInMillis());
+
+        return (data2.getTime() - data1.getTime()) /1000/60/60/24;
     }
 
     private void recuperarTarefas() {

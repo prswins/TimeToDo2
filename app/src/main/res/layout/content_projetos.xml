@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backrepeat"
     android:orientation="vertical"
-    android:padding="8dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.ProjetosActivity"
     tools:showIn="@layout/activity_projetos">
@@ -14,26 +14,38 @@
         android:id="@+id/textViewDescricao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="TextView"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="TextView"
+        android:textColor="@color/design_default_color_primary_dark" />
 
     <TextView
         android:id="@+id/textViewDataIni"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="TextView"
+        android:textColor="@color/design_default_color_primary_dark" />
 
     <Button
         android:id="@+id/buttonDTI"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="alterar data inicio"
         android:theme="@style/AppTheme.Button" />
 
@@ -41,24 +53,30 @@
         android:id="@+id/buttonDTF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:text="alterar data inicio"
         android:theme="@style/AppTheme.Button" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#B3FFFFFF"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewListaTarefas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/design_default_color_primary_dark" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerTarefas"
@@ -70,7 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/design_default_color_primary_dark" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerFunc"

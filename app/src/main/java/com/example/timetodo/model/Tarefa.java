@@ -4,8 +4,11 @@ import com.example.timetodo.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Tarefa implements Serializable {
 String id, dataInicio, dataFim, titulo, descricao, status, projeto,empresa, dataCriacao, funcionarioResponsavel, keyTarefa;
@@ -69,6 +72,8 @@ Long tempoTotalTrabalho, tempoParaTerminar;
     }
 
     public void setTempoParaTerminar(Long tempoParaTerminar) {
+
+
         this.tempoParaTerminar = tempoParaTerminar;
     }
 
@@ -151,11 +156,92 @@ Long tempoTotalTrabalho, tempoParaTerminar;
     }
 
 
-    public void atualizar() {
+    public void atualizarDataInicio() {
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
 
        // db.child(getId()).child(getProjeto()).setValue(this);
+    }
+    public void atualizarDataFim(){
 
     }
+    public void atualizarTempoTrabalhado(Long tempo){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("tempoTotalTrabalho",tempo);
+        db.updateChildren(childUpdates);
+
+    }
+    public void atualizarStatus(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
+
+        SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
+        Date dataAtual = new Date();
+        Date convertedDateIni = new Date();
+        Date convertedDateFim = new Date();
+        String statusAtual = "afazer";
+
+        if (this.getDataFim() != null ) {
+            try {
+                convertedDateFim = formataData.parse(this.getDataFim());
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+            if (this.getDataInicio() != null ) {
+                try {
+                    convertedDateIni = formataData.parse(this.getDataInicio());
+                } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            int diferencaAtualInicial = dataAtual.compareTo(convertedDateIni);
+            if(diferencaAtualInicial > 0){
+                statusAtual = "afazer";
+            }else if (diferencaAtualInicial <= 0 && getTempoTotalTrabalho() > 0){
+                statusAtual = "fazendo";
+            }else {
+                int diferencaAtualFinal = dataAtual.compareTo(convertedDateFim);
+                if (diferencaAtualFinal < 0){
+                    statusAtual = "atrasado";
+
+                }
+            }
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("status",statusAtual);
+        db.updateChildren(childUpdates);
+
+    }
+
+    public void concluirTarefa(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("status","concluida");
+        db.updateChildren(childUpdates);
+
+    }
+
+    public void cancelarTarefa(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("status","cancelada");
+        db.updateChildren(childUpdates);
+
+    }
+
+
+
+
 }

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
-
+    <color name="colorBotaoParar">#FF3D00</color>
     <color name="colorStatusAfazer">#FF9E80</color>
     <color name="colorStatusConcluida">#CCFF90</color>
     <color name="colorStatusFazendo">#80D8FF</color>

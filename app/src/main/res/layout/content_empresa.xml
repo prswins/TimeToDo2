@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backrepeat"
+    android:orientation="vertical"
     android:paddingBottom="80dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.EmpresaActivity"
@@ -11,39 +13,36 @@
 
     <TextView
         android:id="@+id/textViewNome"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:text="TextView"
-        android:textAlignment="textStart"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
         android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewDescr"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:gravity="center"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:text="TextView"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewNome" />
+        android:textAlignment="textStart"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:background="#B3FFFFFF"
         android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDescr">
+        android:padding="8dp">
 
         <AutoCompleteTextView
             android:id="@+id/actv"
@@ -58,11 +57,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
+            android:textColor="@color/design_default_color_primary_dark"
             android:textStyle="bold" />
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,6 +73,7 @@
                     android:id="@+id/recyclerListaFunc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingTop="4dp"
                     android:visibility="visible"
                     tools:itemCount="2">
 
@@ -86,24 +87,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="TextView"
+            android:textColor="@color/design_default_color_primary_dark"
             android:textStyle="bold" />
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerProjetos"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingTop="4dp" />
             </LinearLayout>
         </ScrollView>
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
