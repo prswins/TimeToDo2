@@ -80,8 +80,6 @@ public class TarefaActivity extends AppCompatActivity {
         textViewListaHistorico = findViewById(R.id.textViewTextoHistorico);
         botaoAtividade = findViewById(R.id.buttonIniciarTrabalho);
         botaoFinalizar = findViewById(R.id.buttonFinalizarTrabalho);
-        botaoFinalizar.setVisibility(View.GONE);
-        botaoFinalizar.setEnabled(false);
         recyclerHistorico = findViewById(R.id.recyclerHistorico);
         textViewTotalHorasTrabalho = findViewById(R.id.textViewTotalHorasTrabalho);
         linearLayoutTarefas = findViewById(R.id.linearLayoutTarefas);
@@ -95,7 +93,8 @@ public class TarefaActivity extends AppCompatActivity {
         botaoFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //tarefa.concluirTarefa();
+                tarefa.concluirTarefa(keyTarefa);
+                finish();
                 Log.d("tarefa", "onClick:  concluir tarefa");
             }
         });
@@ -118,10 +117,18 @@ public class TarefaActivity extends AppCompatActivity {
                 linearLayoutDatas.setVisibility(View.GONE);
 
             }
+            if(tarefa.getDataInicio() == null){
+                textViewTdataInicial.setVisibility(View.GONE);
+            }else {
+                textViewTdataInicial.setText("Data do inicio da tarefa: "+tarefa.getDataInicio());
+            }
+            if(tarefa.getDataFim() == null){
+                textViewTdataFinal.setText("Data estimada para o fim da tarefa: "+tarefa.getDataFim());
+            }else {
+                textViewTdataFinal.setVisibility(View.GONE);
+            }
 
-            textViewTdataInicial.setText("Data do inicio da tarefa: "+tarefa.getDataInicio());
-            textViewTdataFinal.setText("Data estimada para o fim da tarefa: "+tarefa.getDataFim());
-           // textViewTdataCriacao.setText("Data da atribuicao da atividade: "+tarefa.getDataCriacao());
+
             textViewTresponsavel.setText("Funcionario responsaval: "+tarefa.getFuncionarioResponsavel());
             if (!(tarefa.getStatus()== null)) {
                 if (tarefa.getStatus().equals("afazer")) {
@@ -162,15 +169,31 @@ public class TarefaActivity extends AppCompatActivity {
                     }
                     }
                 } else if (tarefa.getStatus().equals("concluido")) {
-                    botaoAtividade.setEnabled(false);
-                    botaoAtividade.setVisibility(View.GONE);
-                    botaoFinalizar.setEnabled(false);
-                    botaoFinalizar.setVisibility(View.GONE);
                     linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_concluido));
+
+                    /*runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            botaoAtividade.setEnabled(false);
+                            botaoAtividade.setVisibility(View.GONE);
+                            botaoFinalizar.setEnabled(false);
+                            botaoFinalizar.setVisibility(View.GONE);
+                        }
+                    });*/
+
                     //  ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusConcluido")));
+                }else if (tarefa.getStatus().equals("cancelada")){
+                    linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_cancelada));
+                    /*runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            botaoAtividade.setEnabled(false);
+                            botaoAtividade.setVisibility(View.GONE);
+                            botaoFinalizar.setEnabled(false);
+                            botaoFinalizar.setVisibility(View.GONE);
+                        }
+                    });*/
                 }
-            }else{
-                linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_nenhum));
             }
             linearLayoutTempoTrabalho = findViewById(R.id.linearLayoutTempoTrabalho);
             Long tempoTotal, tempoTrabalhado, restante;
@@ -217,11 +240,28 @@ public class TarefaActivity extends AppCompatActivity {
                 botaoFinalizar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       // tarefa.cancelarTarefa();
+                        tarefa.cancelarTarefa(keyTarefa);
                         Log.d("tarefa", "onClick:  cancelar tarefa");
+                        finish();
                     }
                 });
+                if((tarefa.getStatus().equals("cancelada")) || (tarefa.getStatus().equals("concluida"))){
+                    botaoAtividade.setEnabled(false);
+                    botaoAtividade.setVisibility(View.GONE);
+                    botaoFinalizar.setEnabled(false);
+                    botaoFinalizar.setVisibility(View.GONE);
             }
+            }
+        }else {
+
+            if(tarefa.getStatus().equals("cancelada") || tarefa.getStatus().equals("concluida")){
+                botaoAtividade.setEnabled(false);
+                botaoAtividade.setVisibility(View.GONE);
+                botaoFinalizar.setEnabled(false);
+                botaoFinalizar.setVisibility(View.GONE);
+            }
+
+
         }
 
 

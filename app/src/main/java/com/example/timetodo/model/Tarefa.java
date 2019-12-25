@@ -221,7 +221,7 @@ Long tempoTotalTrabalho, tempoParaTerminar;
 
     }
 
-    public void concluirTarefa(){
+    public void concluirTarefa(String key){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
 
@@ -231,9 +231,9 @@ Long tempoTotalTrabalho, tempoParaTerminar;
 
     }
 
-    public void cancelarTarefa(){
+    public void cancelarTarefa(String key){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
+        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(key);
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("status","cancelada");

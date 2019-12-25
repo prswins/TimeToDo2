@@ -46,7 +46,7 @@ public class FuncionarioActivity extends AppCompatActivity {
     Projeto projetoUsuario = new Projeto();
     Empresa empresaUsuario = new Empresa();
     TextView textViewProjeto, textViewEmpresa, textViewTarefas;
-
+    ActionBar ab;
 
 
     @Override
@@ -55,7 +55,7 @@ public class FuncionarioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_funcionario);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
+        ab = getSupportActionBar();
         textViewEmpresa = findViewById(R.id.textViewEmpresa);
         textViewProjeto = findViewById(R.id.textViewProjeto);
         recuperarDadosUsuario();
@@ -63,11 +63,7 @@ public class FuncionarioActivity extends AppCompatActivity {
         recuperarProjeto();
         recuperarEmpresa();
         String nomeUsuario = usuario.getNome();
-        if (nomeUsuario == null) {
-            ab.setTitle("Funcionario ");
-        }else{
-            ab.setTitle(nomeUsuario);
-        }
+
 
 
 
@@ -134,7 +130,7 @@ public class FuncionarioActivity extends AppCompatActivity {
                 if(empresaUsuario == null){
                     textViewEmpresa.setText("Caro sr. "+usuario.getNome()+", lamentamos mas voce nao esta matriculado em uma empresa, entre em contato com seu gestor ");
                 }else{
-                    textViewEmpresa.setText(usuario.getNome()+" funcionario da "+empresaUsuario.getNome()+".");
+                    textViewEmpresa.setText("Funcionario da "+empresaUsuario.getNome()+".");
                 }
 
 
@@ -232,6 +228,11 @@ public class FuncionarioActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("FuncionarioActivity", "onDataChange: dataSnapshot: "+dataSnapshot.getValue(Usuario.class).toString());
                 usuario = (Usuario) dataSnapshot.getValue(Usuario.class);
+                if (dataSnapshot.getValue(Usuario.class).getNome() == null) {
+                    ab.setTitle("Funcionario");
+                }else{
+                    ab.setTitle(dataSnapshot.getValue(Usuario.class).getNome());
+                }
                 Log.d("FuncionarioActivity", "onDataChange: usuario: "+usuario.getNome().toString());
 
             }

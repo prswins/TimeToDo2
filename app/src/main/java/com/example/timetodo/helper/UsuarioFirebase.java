@@ -122,7 +122,8 @@ public class UsuarioFirebase {
                          i = new Intent(activity, EmpresarioActivity.class);
 
                     }else {
-                          i = new Intent(activity, FuncionarioActivity.class);
+                         i = new Intent(activity, FuncionarioActivity.class);
+                        i.putExtra("usuario", usuario);
 
                     }
                     activity.startActivity(i);

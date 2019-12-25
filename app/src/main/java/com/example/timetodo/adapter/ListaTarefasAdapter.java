@@ -45,10 +45,23 @@ public class ListaTarefasAdapter extends RecyclerView.Adapter<ListaTarefasAdapte
         holder.descricao.setText(t.getDescricao());
         holder.dataAtribuicao.setText(t.getDataCriacao());
         String dataIni, dataFim;
-        dataIni = "Data de inicio da Tarefa: ";
-        dataFim = "Data prevista para fim da tarefa: ";
-        holder.dataInicial.setText(dataIni +t.getDataInicio());
-        holder.dataFinal.setText(dataFim +t.getDataFim() );
+
+
+        if (t.getDataInicio() == null ){
+            holder.dataInicial.setVisibility(View.GONE);
+        }else {
+            dataIni = "Data de inicio da Tarefa: ";
+            holder.dataInicial.setText(dataIni +t.getDataInicio());
+        }
+
+        if (t.getDataFim() == null){
+            holder.dataFinal.setVisibility(View.GONE);
+        }else{
+            dataFim = "Data prevista para fim da tarefa: ";
+            holder.dataFinal.setText(dataFim +t.getDataFim() );
+        }
+
+
         holder.usuario.setText(t.getFuncionarioResponsavel());
         holder.tempo.setText("Tempo total trabalhado: "+String.valueOf((t.getTempoTotalTrabalho()/3600)+" horas."));
 
@@ -79,9 +92,11 @@ public class ListaTarefasAdapter extends RecyclerView.Adapter<ListaTarefasAdapte
 
             }else if(t.getStatus().equals("concluido")){
                 holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_concluido));
+            }else if (t.getStatus().equals("cancelada")){
+                holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_cancelada));
             }
         }else if (t.getDataFim() == null){
-            holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_nenhum));
+
         }
     }
 

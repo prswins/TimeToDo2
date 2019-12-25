@@ -4,7 +4,9 @@ import com.example.timetodo.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Projeto implements Serializable {
     String status, titulo, descricao,empresa, dataInicio, dataFim, id;
@@ -106,6 +108,26 @@ public class Projeto implements Serializable {
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
         DatabaseReference projetos = firebaseRef.child( "projetos" ).child(this.getId());
         projetos.child(key).removeValue();
+
+    }
+    public void atualizarDataInicio(String key){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference projetos = firebaseRef.child( "projetos" ).child(this.getId()).child(key);
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("dataInicio",getDataInicio());
+        projetos.updateChildren(childUpdates);
+
+
+    }
+    public void atualizarDataFim(String key){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference projetos = firebaseRef.child( "projetos" ).child(this.getId()).child(key);
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("dataFim",getDataInicio());
+        projetos.updateChildren(childUpdates);
+
 
     }
 

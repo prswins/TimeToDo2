@@ -64,6 +64,9 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
     final int cMonth = c.get(Calendar.MONTH);
     final int cDay = c.get(Calendar.DAY_OF_MONTH);
     final String dataAtual = String.valueOf(cDay)+"-"+String.valueOf(cMonth)+"-"+String.valueOf(cYear);
+
+    Calendar dateSelected = Calendar.getInstance();
+    private DatePickerDialog datePickerDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,10 +108,12 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
         botaoDTI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 showDatePickerDialog(v);
-                projeto.setDataInicio(currentDateString);
-                atualizarProjeto();
-                atualizarDatas();
+                atualizarDI();
+                Log.d("datapickerrrrrr", "botao: "+v.getId());
+
+
 
             }
         });
@@ -116,11 +121,18 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onClick(View v) {
                 showDatePickerDialog(v);
+                atualizarDF();
                 projeto.setDataFim(currentDateString);
-                atualizarProjeto();
+                projeto.atualizarDataFim(keyProjeto);
                 atualizarDatas();
 
+
+
+
+
+
             }
+
         });
 
 
@@ -166,6 +178,19 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
         });
     }
 
+
+    private void atualizarDF() {
+        projeto.setDataFim(currentDateString);
+        projeto.atualizarDataFim(keyProjeto);
+        atualizarDatas();
+    }
+
+    private void atualizarDI() {
+        projeto.setDataInicio(currentDateString);
+        projeto.atualizarDataInicio(keyProjeto);
+        atualizarDatas();
+    }
+
     private void atualizarDatas() {
         runOnUiThread(new Runnable() {
 
@@ -198,6 +223,9 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
     private void showDatePickerDialog(View v) {
         DialogFragment datePicker = new DatePickerFragment();
         datePicker.show(getSupportFragmentManager(), "date picker");
+        Log.d("datapickerrrrrr", "onDateSet: "+v.getId());
+
+
     }
 
     private void inserirNovaTarefa() {
@@ -380,5 +408,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         currentDateString = String.valueOf(dayOfMonth)+"-"+String.valueOf(monthOfYear)+"-"+String.valueOf(year);
+        Log.d("datapicker", "onDateSet: "+view.getId());
+
     }
 }
