@@ -36,7 +36,12 @@ public class ListaFuncionariosAdapter extends RecyclerView.Adapter<ListaFunciona
         Usuario funcionario = funcionarios.get(position);
         holder.nome.setText(funcionario.getNome());
         holder.email.setText(funcionario.getEmail());
-        holder.cargo.setText(funcionario.getTipo());
+        if (funcionario.getCargo() != null){
+            holder.cargo.setText(funcionario.getTipo()+", "+funcionario.getCargo());
+        }else {
+            holder.cargo.setText(funcionario.getTipo());
+        }
+
 
     }
 

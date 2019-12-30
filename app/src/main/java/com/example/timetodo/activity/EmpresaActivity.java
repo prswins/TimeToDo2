@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.timetodo.R;
-import com.example.timetodo.adapter.AutoCompletarUsuarioAdapter;
 import com.example.timetodo.adapter.ListaFuncionariosAdapter;
 import com.example.timetodo.adapter.ListaProjetosAdapter;
 import com.example.timetodo.config.ConfiguracaoFirebase;
@@ -36,8 +34,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +55,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
     final DatabaseReference dbRef = ConfiguracaoFirebase.getFirebaseDatabase();
     String usuarioAtual = UsuarioFirebase.getIdentificadorUsuario();
     List<Usuario> listaUsuarios = new ArrayList<>();
+    List<Usuario> listaFuncionarioEmpresa = new ArrayList<>();
     private ListaFuncionariosAdapter adapterFunc;
     private ListaProjetosAdapter adapterProj;
 
@@ -75,7 +76,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
           idEmpresario = getIntent().getExtras().getString("idEmpresario");
           keyEmpresa = getIntent().getExtras().getString("keyEmpresa");
             ab.setTitle(empresa.getNome());
-            Log.d("empresaAcvitity", "empresaAcvitity "+empresa.toString()+"    "+idEmpresario);
+            Log.d("empresaAcvitity", "empresaAcvitity "+empresa.toString()+"    "+idEmpresario+ "   "+keyEmpresa);
 
         }
 
@@ -89,7 +90,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
         campoListaProjetos = findViewById(R.id.textViewListaProjetos);
 
             recyclerFunc = findViewById(R.id.recyclerListaFunc);
-            adapterFunc = new ListaFuncionariosAdapter(listaUsuarios, getApplicationContext());
+            adapterFunc = new ListaFuncionariosAdapter(listaFuncionarioEmpresa, getApplicationContext());
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerFunc.setLayoutManager(layoutManager);
             recyclerFunc.setHasFixedSize(true);
@@ -127,6 +128,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
                     i.putExtra("idEmpresario", idEmpresario);
                     i.putExtra("projeto",  p);
                     i.putExtra("projetoKey", listaKeyProjetos.get(position));
+                    i.putExtra("listaFuncionarios", (Serializable) listaFuncionarioEmpresa);
                     startActivity(i);
                 }
 
@@ -170,10 +172,6 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
                         .setAction("Action", null).show();
             }
         });
-
-        AutoCompleteTextView editText = findViewById(R.id.actv);
-        AutoCompletarUsuarioAdapter adapter = new AutoCompletarUsuarioAdapter(this, listaUsuarios);
-        editText.setAdapter(adapter);
 
 
 
@@ -288,7 +286,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
     private void inserirNovoUsuario() {
         // startActivity(new Intent(this, CadastroUsuarioActivity.class));
         LayoutInflater li = LayoutInflater.from(this);
-        View promptsView = li.inflate(R.layout.prompts, null);
+        View promptsView = li.inflate(R.layout.prompts_add_funcionario, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -298,6 +296,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
 
         final EditText userInput = (EditText) promptsView
                 .findViewById(R.id.editTextDialogUserInput);
+        final EditText userImputCargo = (EditText) promptsView.findViewById(R.id.editTextDialogUserInputCargo);
 
         // set dialog message
         alertDialogBuilder
@@ -307,7 +306,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
                             public void onClick(DialogInterface dialog,int id) {
                                 // get user input and set it to result
                                 // edit text
-                                salvarUsuario(userInput.getText().toString(), "funcionario");
+                                salvarUsuario(userInput.getText().toString(),userImputCargo.getText().toString());
 
                             }
                         })
@@ -326,20 +325,61 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
 
     }
 
-    private void salvarUsuario(String email, String tipo) {
+    private void salvarUsuario(String email, String cargo) {
         Usuario usuario = new Usuario();
-        usuario.setTipo(tipo);
-        usuario.setEmail(email);
-        usuario.setDataCriacaoConta();
 
+        for(Usuario u:listaUsuarios){
+            if(u.getEmail().equals(email)){
+                usuario = u;
+                Log.d("empresaAcivi", "salvarUsuario: "+usuario.getId());
+                break;
+            }
+        }
+        if (usuario.getId() == null){
 
-        DatabaseReference usuarios = ConfiguracaoFirebase.getFirebaseDatabase();
-        usuarios.child("permitidos").push().setValue(usuario);
+        }else{
+            usuario.atribuirEmpresa(keyEmpresa, usuario.getId());
+            usuario.atribuirCargo(cargo);
+        }
 
     }
 
     private void carregarTdsUsuarios() {
         final DatabaseReference qUsuarios = dbRef.child("usuarios");
+        Log.d("carregarUsuarios", "carregarUsuarios: "+qUsuarios.toString());
+        qUsuarios.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                listaUsuarios.clear();
+                Log.d("carregarUsuarios","carregarUsuarios "+ dataSnapshot.toString());
+                int i =0;
+                for (DataSnapshot d :dataSnapshot.getChildren()){
+
+                    Log.d("carregarUsuarios","carregarUsuarios "+ d.getValue(Usuario.class).getEmail());
+
+                    if(d.getValue(Usuario.class).getTipo().equals("funcionario"))
+                    {
+                        listaUsuarios.add((Usuario)d.getValue(Usuario.class));
+                        Log.d("carregarUsuarios","carregarUsuarios : lista "+ listaUsuarios.get(i).getEmail());
+                        i++;
+
+                    }
+
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    carregarFuncionarios();
+    }
+
+    private void carregarFuncionarios() {
+
+        Query qUsuarios = dbRef.child("usuarios").orderByChild("idEmpresa").equalTo(keyEmpresa);
         Log.d("carregarUsuarios", "carregarUsuarios: "+qUsuarios.toString());
         qUsuarios.addValueEventListener(new ValueEventListener() {
             @Override
@@ -355,7 +395,7 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
                     campoListaFunc.setText("Nao existem Funcionarios");
                     recyclerFunc.setVisibility(View.GONE);
                 }
-                listaUsuarios.clear();
+                listaFuncionarioEmpresa.clear();
                 Log.d("carregarUsuarios","carregarUsuarios "+ dataSnapshot.toString());
                 int i =0;
                 for (DataSnapshot d :dataSnapshot.getChildren()){
@@ -364,12 +404,14 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
 
                     if(d.getValue(Usuario.class).getTipo().equals("funcionario"))
                     {
-                        listaUsuarios.add((Usuario)d.getValue(Usuario.class));
+                        listaFuncionarioEmpresa.add((Usuario)d.getValue(Usuario.class));
                         Log.d("carregarUsuarios","carregarUsuarios : lista "+ listaUsuarios.get(i).getEmail());
                         i++;
+
                     }
+
                 }
-                adapterProj.notifyDataSetChanged();
+                adapterFunc.notifyDataSetChanged();
 
 
             }
@@ -378,6 +420,9 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
 
             }
         });
+
+
+
 
     }
 
@@ -435,8 +480,8 @@ public class EmpresaActivity extends AppCompatActivity implements DatePickerDial
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
 
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(currentDateString);
+       // TextView textView = (TextView) findViewById(R.id.textView);
+      //  textView.setText(currentDateString);
 
         Log.d("dataPicker", "dataPicker "+currentDateString);
     }

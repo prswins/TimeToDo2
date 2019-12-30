@@ -59,9 +59,12 @@ public class FuncionarioActivity extends AppCompatActivity {
         textViewEmpresa = findViewById(R.id.textViewEmpresa);
         textViewProjeto = findViewById(R.id.textViewProjeto);
         recuperarDadosUsuario();
-        recuperarTarefas();
-        recuperarProjeto();
-        recuperarEmpresa();
+
+            recuperarTarefas();
+            recuperarProjeto();
+            recuperarEmpresa();
+
+
         String nomeUsuario = usuario.getNome();
 
 
@@ -109,6 +112,9 @@ public class FuncionarioActivity extends AppCompatActivity {
     }
 
     private void recuperarEmpresa() {
+
+
+
         final DatabaseReference empresas = dbRef.child("empresas");
         empresas.addValueEventListener(new ValueEventListener() {
             @Override
@@ -118,22 +124,20 @@ public class FuncionarioActivity extends AppCompatActivity {
                     Log.d("recuperarEmpresa", "onDataChange: dataSnapshot : for :"+empresas.toString());
                     for(DataSnapshot empresa:empresas.getChildren()){
                         Log.d("recuperarEmpresa", "onDataChange: empresas : for :"+empresa.toString());
-                        if (empresa.getKey().equals(usuario.getIdEmpresa())){
+                        if(usuario.getIdEmpresa() != null) {
+                            if (empresa.getKey().equals(usuario.getIdEmpresa())) {
 
-                            Log.d("recuperarEmpresa", "onDataChange: recuperarEmpresa : if"+empresa.getValue(Empresa.class).getNome());
-                            empresaUsuario = empresa.getValue(Empresa.class);
+                                Log.d("recuperarEmpresa", "onDataChange: recuperarEmpresa : if" + empresa.getValue(Empresa.class).getNome());
+                                empresaUsuario = empresa.getValue(Empresa.class);
+                                textViewEmpresa.setText("Funcionario da "+empresaUsuario.getNome()+".");
+                            }
+                        }else {
+                            textViewEmpresa.setText("Caro sr. "+usuario.getNome()+", lamentamos mas voce nao esta matriculado em uma empresa, entre em contato com seu gestor ");
                         }
 
                     }
 
                 }
-                if(empresaUsuario == null){
-                    textViewEmpresa.setText("Caro sr. "+usuario.getNome()+", lamentamos mas voce nao esta matriculado em uma empresa, entre em contato com seu gestor ");
-                }else{
-                    textViewEmpresa.setText("Funcionario da "+empresaUsuario.getNome()+".");
-                }
-
-
 
             }
 
@@ -147,78 +151,87 @@ public class FuncionarioActivity extends AppCompatActivity {
     }
 
     private void recuperarProjeto() {
-        final DatabaseReference projetos = dbRef.child("projetos");
-        projetos.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot projeto:dataSnapshot.child(usuario.getIdEmpresa()).getChildren()){
+
+            final DatabaseReference projetos = dbRef.child("projetos");
+            projetos.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (usuario.getIdEmpresa()!=null){
 
 
-                    if(projeto.getKey().equals(usuario.getIdProjeto())){
+                    for (DataSnapshot projeto : dataSnapshot.child(usuario.getIdEmpresa()).getChildren()) {
 
-                                projetoUsuario = projeto.getValue(Projeto.class);
-                                Log.d("recuperarProjeto", "onDataChange: projeto"+projeto.getValue(Projeto.class).toString());
-                                Log.d("recuperarProjeto", "onDataChange: projetoUsuario"+projetoUsuario.toString());
 
+                        if (projeto.getKey().equals(usuario.getIdProjeto())) {
+
+                            projetoUsuario = projeto.getValue(Projeto.class);
+                            Log.d("recuperarProjeto", "onDataChange: projeto" + projeto.getValue(Projeto.class).toString());
+                            Log.d("recuperarProjeto", "onDataChange: projetoUsuario" + projetoUsuario.toString());
+
+                        }
+                        if (projetoUsuario == null) {
+                            textViewProjeto.setText("Nao esta a trabalhar em um projeto");
+                        } else {
+                            textViewProjeto.setText(projetoUsuario.getTitulo());
+                        }
+                        break;
                     }
-                    if(projetoUsuario == null){
-                        textViewProjeto.setText("Nao esta a trabalhar em um projeto");
-                    }else{
-                        textViewProjeto.setText(projetoUsuario.getTitulo());
                     }
-                    break;
+
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                }
+            });
 
-            }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
 
     private void recuperarTarefas() {
 
-        final DatabaseReference tarefas = dbRef.child("tarefas");
 
-        Log.d("recuperarTarefas", "recuperarTarefas: recuperarTarefas"+tarefas.toString());
-        tarefas.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("recuperarTarefas", "recuperarTarefas: dataSnapshot"+dataSnapshot.getValue().toString());
-                listaTarefas.clear();
-                listaKeyTarefas.clear();
+            final DatabaseReference tarefas = dbRef.child("tarefas");
 
-                for(DataSnapshot tarefa:dataSnapshot.child(usuario.getIdProjeto()).getChildren()){
-                    if(tarefa.getValue(Tarefa.class).getFuncionarioResponsavel().equals(usuario.getEmail())){
-                        Log.i("recuperarTarefas", "onDataChange: for 1__"+tarefa.getValue(Empresa.class).toString());
-                        listaTarefas.add(tarefa.getValue(Tarefa.class));
-                        listaKeyTarefas.add(tarefa.getKey());
+            Log.d("recuperarTarefas", "recuperarTarefas: recuperarTarefas" + tarefas.toString());
+            tarefas.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Log.d("recuperarTarefas", "recuperarTarefas: dataSnapshot" + dataSnapshot.getValue().toString());
+                    listaTarefas.clear();
+                    listaKeyTarefas.clear();
+                    if (usuario.getIdProjeto()!=null){
+
+
+
+                    for (DataSnapshot tarefa : dataSnapshot.child(usuario.getIdProjeto()).getChildren()) {
+                        if (tarefa.getValue(Tarefa.class).getFuncionarioResponsavel().equals(usuario.getEmail())) {
+                            Log.i("recuperarTarefas", "onDataChange: for 1__" + tarefa.getValue(Empresa.class).toString());
+                            listaTarefas.add(tarefa.getValue(Tarefa.class));
+                            listaKeyTarefas.add(tarefa.getKey());
+                        }
                     }
+                    }
+                    if (listaTarefas.size() == 0) {
+                        textViewTarefas.setText("Nao existem tarefas");
+                        recyclerViewTarefas.setVisibility(View.GONE);
+                    } else {
+                        textViewTarefas.setText("Lista de tarefas");
+                        recyclerViewTarefas.setVisibility(View.VISIBLE);
+                    }
+                    adapterTarefas.notifyDataSetChanged();
+
+
                 }
-                if (listaTarefas.size() == 0){
-                    textViewTarefas.setText("Nao existem tarefas");
-                    recyclerViewTarefas.setVisibility(View.GONE);
-                }else{
-                    textViewTarefas.setText("Lista de tarefas");
-                    recyclerViewTarefas.setVisibility(View.VISIBLE);
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
-                adapterTarefas.notifyDataSetChanged();
+            });
+        }
 
-
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
 
     private void recuperarDadosUsuario() {

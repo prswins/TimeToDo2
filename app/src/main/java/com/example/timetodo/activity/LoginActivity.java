@@ -154,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 throw task.getException();
                             }catch ( FirebaseAuthInvalidUserException e ) {
+                                excecao = "Usuário não está cadastrado.";
                                     Intent i = new Intent(getApplicationContext(), CadastroUsuarioActivity.class);
                                    // Log.d("autenticacao", usuario.getTipo());
                                     i.putExtra("usuarioEmail",  usuario.getEmail());
@@ -161,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                                     i.putExtra("usuarioTipo",  usuario.getTipo());
                                     startActivity(i);
 
-                                excecao = "Usuário não está cadastrado.";
+
                             }catch ( FirebaseAuthInvalidCredentialsException e ){
                                 excecao = "E-mail e senha não correspondem a um usuário cadastrado";
                             }catch (Exception e){

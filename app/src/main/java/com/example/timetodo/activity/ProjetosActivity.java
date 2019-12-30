@@ -31,6 +31,7 @@ import com.example.timetodo.helper.UsuarioFirebase;
 import com.example.timetodo.model.HistoricoAtividadesTarefas;
 import com.example.timetodo.model.Projeto;
 import com.example.timetodo.model.Tarefa;
+import com.example.timetodo.model.Usuario;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -57,7 +58,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
     ListaTarefasAdapter adapterTarefas;
     String keyProjeto;
     String currentDateString;
-
+    List<Usuario> listaFuncionarios = new ArrayList<>();
 
     final Calendar c = Calendar.getInstance();
     final int cYear = c.get(Calendar.YEAR);
@@ -100,6 +101,15 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
             Log.d("empresaAcvitity", "empresaAcvitity "+projeto.toString()+"    "+idEmpresario);
             textViewDescricao.setText(projeto.getDescricao());
             textViewStatus.setText(projeto.getStatus());
+            ArrayList<Usuario> dados = (ArrayList<Usuario>) getIntent().getSerializableExtra("listaFuncionarios");
+            listaFuncionarios.addAll(dados);
+            //listaFuncionarios.addAll = getIntent().getSerializableExtra("listaFuncionarios");
+
+            for(Usuario u : listaFuncionarios){
+                Log.d("listaFuncionarios", "onCreate: "+u.getEmail());
+            }
+
+
 
 
             atualizarDatas();
@@ -230,6 +240,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
 
     private void inserirNovaTarefa() {
         final Tarefa tarefa = new Tarefa();
+
         LayoutInflater li = LayoutInflater.from(this);
         View promptsView = li.inflate(R.layout.prompt_add_tarefa, null);
 
@@ -242,6 +253,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
         final EditText InputTitulo = (EditText) promptsView.findViewById(R.id.textViewAdaTTitulo2);
         final EditText InputDescricao = (EditText) promptsView.findViewById(R.id.textViewAdaTDesc2);
         final EditText InputUsuario = (EditText) promptsView.findViewById(R.id.textViewAdaTUsuario2);
+
 
         final TextView TextDtIni =  (TextView) promptsView
                 .findViewById(R.id.textViewDataIni);
@@ -284,6 +296,7 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
 
 
 
+
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
@@ -301,7 +314,16 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
                                 tarefa.setFuncionarioResponsavel(InputUsuario.getText().toString());
                                 tarefa.setTempoTotalTrabalho((long) 0);
                                 tarefa.setTempoParaTerminar(calcTempoTerminar(tarefa.getDataInicio(),tarefa.getDataFim()));
+                                Usuario usuario = new Usuario();
+                                for(Usuario ut:listaFuncionarios){
+                                    if(ut.getEmail().equals(InputUsuario.getText().toString())){
+                                        usuario = ut;
+                                        break;
+                                    }
+                                }
+
                                 tarefa.salvar();
+                                usuario.atribuirProjeto(keyProjeto, usuario.getId());
 
 
                             }
@@ -319,13 +341,17 @@ public class ProjetosActivity extends AppCompatActivity implements DatePickerDia
         // show it
         alertDialog.show();
     }
+
+    private void salvarTarefa() {
+    }
+
     private long calcTempoTerminar(String dataI, String dataF){
 
         if((dataI!= null) && (dataF != null)){
 
-            Long hr = DiferencaDatas(dataI, dataF);
-            Log.d("tarefa", "setTempoParaTerminar: "+hr);
-            return hr*8*60*60;
+            Long dias = DiferencaDatas(dataI, dataF);
+            Log.d("tarefa", "setTempoParaTerminar: "+dias);
+            return (((dias*8)*60)*60);
 
         }else{
             return Long.valueOf(0);

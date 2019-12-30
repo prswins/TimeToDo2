@@ -7,21 +7,24 @@ import com.google.firebase.database.DatabaseReference;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(String email, String id, String nome, String tipo, String senha, String dataCriacaoConta) {
+    public Usuario(String email, String id, String nome, String tipo, String senha, String dataCriacaoConta, String cargo) {
         this.email = email;
         this.id = id;
         this.nome = nome;
         this.tipo = tipo;
         this.senha = senha;
         this.dataCriacaoConta = dataCriacaoConta;
+        this.cargo = cargo;
     }
 
-    String email,id, nome, tipo, senha,dataCriacaoConta, idEmpresa, idProjeto;
+    String email,id, nome, tipo, senha,dataCriacaoConta, idEmpresa, idProjeto, cargo;
 
     public String getDataCriacaoConta() {
         return dataCriacaoConta;
@@ -33,6 +36,14 @@ public class Usuario implements Serializable {
         String dataFormatada = formataData.format(data);
 
         this.dataCriacaoConta = dataFormatada;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 
     public String getIdEmpresa() {
@@ -97,7 +108,32 @@ public class Usuario implements Serializable {
 
         usuarios.child(UsuarioFirebase.getIdentificadorUsuario()).setValue(this);
 
-
-
     }
+    public void atribuirEmpresa(String idEmpresa, String idUsuario){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuarios = firebaseRef.child( "usuarios" ).child(idUsuario);
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("idEmpresa",idEmpresa);
+        usuarios.updateChildren(childUpdates);
+    }
+    public void atribuirProjeto(String idProjeto, String idUsuario){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuarios = firebaseRef.child( "usuarios" ).child(this.getId());
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("idProjeto",idProjeto);
+        usuarios.updateChildren(childUpdates);
+    }
+    public void atribuirCargo(String cargo){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuarios = firebaseRef.child( "usuarios" ).child(this.getId());
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("cargo",cargo);
+        usuarios.updateChildren(childUpdates);
+    }
+
+
+
 }
