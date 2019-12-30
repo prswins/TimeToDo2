@@ -44,18 +44,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#B3FFFFFF"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewListaProjetos"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="TextView"
-                android:textColor="@color/design_default_color_primary_dark"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:background="#99FFFFFF"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+                <TextView
+                    android:id="@+id/textViewListaProjetos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:text="TextView"
+                    android:textColor="@color/design_default_color_primary_dark"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -73,17 +80,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
+                        android:layout_margin="16dp"
                         android:paddingTop="4dp" />
                 </LinearLayout>
             </ScrollView>
-
-            <TextView
-                android:id="@+id/textViewListaFunc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textColor="@color/design_default_color_primary_dark"
-                android:textStyle="bold" />
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -94,10 +94,29 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#99FFFFFF"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:id="@+id/textViewListaFunc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border"
+                            android:text="TextView"
+                            android:textColor="@color/design_default_color_primary_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerListaFunc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_margin="16dp"
                         android:paddingTop="4dp"
                         android:visibility="visible"
                         tools:itemCount="2">

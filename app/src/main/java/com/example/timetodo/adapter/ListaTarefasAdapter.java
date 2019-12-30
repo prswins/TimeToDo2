@@ -90,7 +90,7 @@ public class ListaTarefasAdapter extends RecyclerView.Adapter<ListaTarefasAdapte
                 }
 
 
-            }else if(t.getStatus().equals("concluido")){
+            }else if(t.getStatus().equals("concluida")){
                 holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_concluido));
             }else if (t.getStatus().equals("cancelada")){
                 holder.fundo.setBackground(context.getResources().getDrawable(R.drawable.layout_cancelada));

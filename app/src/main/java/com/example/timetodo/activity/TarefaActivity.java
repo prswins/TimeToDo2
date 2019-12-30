@@ -13,6 +13,7 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -161,14 +162,16 @@ public class TarefaActivity extends AppCompatActivity {
 
                     if (dataAtual.after(dataFim)) {
                         botaoAtividade.setEnabled(false);
+                        Toast.makeText(getApplicationContext(), "Tarefa atrasada", Toast.LENGTH_LONG);
                         linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_atrasado));
+
 
                     } else {
                         linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_fazendo));
                         //     ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("colorStatusFazendo")));
                     }
                     }
-                } else if (tarefa.getStatus().equals("concluido")) {
+                } else if (tarefa.getStatus().equals("concluida")) {
                     linearLayoutTarefas.setBackground(getResources().getDrawable(R.drawable.layout_concluido));
 
                     /*runOnUiThread(new Runnable() {
@@ -426,7 +429,7 @@ public class TarefaActivity extends AppCompatActivity {
         tarefa.setTempoTotalTrabalho(tempoTotalTrabalhado);
         tarefa.setKeyTarefa(keyTarefa);
         tarefa.atualizarTempoTrabalhado((tarefa.getTempoTotalTrabalho()+(SEGUNDOS /3600)));//segundos em horas
-        tarefa.atualizarStatus();
+        tarefa.atualizarStatus(keyTarefa);
         SEGUNDOS = 0;
 
 

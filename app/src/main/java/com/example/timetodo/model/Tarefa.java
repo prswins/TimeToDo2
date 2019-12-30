@@ -1,5 +1,7 @@
 package com.example.timetodo.model;
 
+import android.util.Log;
+
 import com.example.timetodo.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
@@ -174,9 +176,9 @@ Long tempoTotalTrabalho, tempoParaTerminar;
         db.updateChildren(childUpdates);
 
     }
-    public void atualizarStatus(){
+    public void atualizarStatus(String key){
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(getKeyTarefa());
+        DatabaseReference db = firebaseRef.child("tarefas").child(getId()).child(key);
 
         SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
         Date dataAtual = new Date();
@@ -202,14 +204,21 @@ Long tempoTotalTrabalho, tempoParaTerminar;
                 }
             }
 
-            int diferencaAtualInicial = dataAtual.compareTo(convertedDateIni);
+            int diferencaAtualInicial = convertedDateIni.compareTo(dataAtual);
+        Log.d("tarefa status", "atualizarStatus: "+diferencaAtualInicial );
             if(diferencaAtualInicial > 0){
+                Log.d("tarefa status", "atualizarStatus a fazer: "+diferencaAtualInicial );
+
                 statusAtual = "afazer";
             }else if (diferencaAtualInicial <= 0 && getTempoTotalTrabalho() > 0){
+                Log.d("tarefa status", "atualizarStatus fazendo: "+diferencaAtualInicial );
+
                 statusAtual = "fazendo";
             }else {
-                int diferencaAtualFinal = dataAtual.compareTo(convertedDateFim);
+                int diferencaAtualFinal = convertedDateFim.compareTo(dataAtual);
                 if (diferencaAtualFinal < 0){
+
+                    Log.d("tarefa status", "atualizarStatus atrasado: "+diferencaAtualInicial );
                     statusAtual = "atrasado";
 
                 }
